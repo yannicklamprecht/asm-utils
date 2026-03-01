@@ -13,7 +13,7 @@ import java.lang.constant.ClassDesc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.papermc.classfile.ClassfileUtils.desc;
+import static io.papermc.classfile.ClassFiles.desc;
 
 class SimpleTest {
 
