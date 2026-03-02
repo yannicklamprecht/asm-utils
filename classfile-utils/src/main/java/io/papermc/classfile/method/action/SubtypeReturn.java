@@ -26,7 +26,7 @@ public record SubtypeReturn(ClassDesc newReturnType) implements MethodRewriteAct
     @Override
     public Optional<String> isValidFor(final MethodNamePredicate namePredicate, final MethodDescriptorPredicate descriptorPredicate) {
         // only valid if you are search by return type
-        if (!(descriptorPredicate instanceof MethodDescriptorPredicate.ReturnType)) {
+        if (!(descriptorPredicate instanceof MethodDescriptorPredicate.HasReturn)) {
             return Optional.of("You must use a return descriptor predicate on " + descriptorPredicate);
         }
         return Optional.empty();
@@ -43,14 +43,9 @@ public record SubtypeReturn(ClassDesc newReturnType) implements MethodRewriteAct
     public void rewriteInvokeDynamic(final MethodTransformContext context, final DirectMethodHandleDesc.Kind kind, final BootstrapInfo bootstrapInfo) {
         final MethodTransformContext.MethodInfo info = context.methodInfo();
         final ConstantDesc[] newArgs = bootstrapInfo.args().toArray(new ConstantDesc[0]);
-        // For VIRTUAL/INTERFACE_VIRTUAL kinds, descriptor (i.e., methodHandle.invocationType()) includes the receiver
-        // as the first parameter. But MethodHandleDesc.ofMethod for VIRTUAL adds the receiver itself,
-        // so we must strip it before constructing the new handle.
-        final MethodTypeDesc handleMethodType = switch (kind) {
-            case VIRTUAL, INTERFACE_VIRTUAL -> info.descriptor().dropParameterTypes(0, 1).changeReturnType(this.newReturnType);
-            default -> info.descriptor().changeReturnType(this.newReturnType);
-        };
+        final MethodTypeDesc handleMethodType = info.descriptor().changeReturnType(this.newReturnType);
         newArgs[ClassFiles.BOOTSTRAP_HANDLE_IDX] = MethodHandleDesc.ofMethod(kind, info.owner(), info.name(), handleMethodType);
+        // we are changing the descriptor directly instead of delegating, so we need to change the dynamic type
         if (newArgs[ClassFiles.DYNAMIC_TYPE_IDX] instanceof final MethodTypeDesc instantiatedType) {
             newArgs[ClassFiles.DYNAMIC_TYPE_IDX] = instantiatedType.changeReturnType(this.newReturnType);
         }

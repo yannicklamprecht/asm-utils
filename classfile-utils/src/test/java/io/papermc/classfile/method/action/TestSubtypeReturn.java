@@ -13,6 +13,8 @@ import java.lang.constant.ClassDesc;
 import java.util.List;
 
 import static io.papermc.classfile.ClassFiles.desc;
+import static io.papermc.classfile.method.MethodDescriptorPredicate.hasReturn;
+import static io.papermc.classfile.method.MethodNamePredicate.exact;
 
 class TestSubtypeReturn {
 
@@ -23,7 +25,7 @@ class TestSubtypeReturn {
     @TransformerTest("data.methods.inplace.SubTypeReturnUser")
     void test(final TransformerCheck check) {
         final List<MethodRewrite> rewrites = List.of(
-            new MethodRewrite(METHODS, MethodNamePredicate.exact("get", "getStatic"), MethodDescriptorPredicate.hasReturn(ENTITY), new SubtypeReturn(PLAYER))
+            new MethodRewrite(METHODS, exact("get", "getStatic"), hasReturn(ENTITY), new SubtypeReturn(PLAYER))
         );
         check.run(new RewriteProcessor(rewrites));
     }
