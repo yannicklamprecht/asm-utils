@@ -10,8 +10,14 @@ public sealed interface MethodNamePredicate extends Predicate<String> {
 
     static MethodNamePredicate constructor() {
         final class Holder {
+
+            private Holder() {
+
+            }
+
             static final MethodNamePredicate INSTANCE = new Constructor();
         }
+
         return Holder.INSTANCE;
     }
 

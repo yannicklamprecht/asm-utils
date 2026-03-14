@@ -32,7 +32,6 @@ import static io.papermc.classfile.ClassFiles.constructorMethodName;
  */
 public record DirectStaticCall(ClassDesc newOwner, @Nullable String staticMethodName) implements MethodRewriteAction {
 
-
     public DirectStaticCall(final ClassDesc newOwner) {
         this(newOwner, null);
     }

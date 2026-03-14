@@ -3,14 +3,11 @@ package io.papermc.classfile;
 import io.papermc.classfile.method.transform.MethodTransformContext;
 import java.lang.classfile.CodeBuilder;
 import java.lang.classfile.Opcode;
-import java.lang.classfile.TypeKind;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.DirectMethodHandleDesc;
 import java.lang.constant.MethodTypeDesc;
 import java.lang.invoke.LambdaMetafactory;
-import java.util.Set;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
 
 public final class ClassFiles {
 
